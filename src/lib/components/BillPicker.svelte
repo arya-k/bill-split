@@ -1,26 +1,21 @@
 <script lang="ts">
-	import * as Avatar from '$lib/components/ui/avatar';
 	import { Button } from '$lib/components/ui/button';
-	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Skeleton } from '$lib/components/ui/skeleton';
-	import { slide } from 'svelte/transition';
-
-	import { initials, type Person } from '$lib/utils';
-
-	type Row = {
-		amount: string;
-		actives: Set<string>;
-	};
+	import type { Person, Row } from '$lib/utils';
+	import PersonIcon from './PersonIcon.svelte';
+	import Trash from './Trash.svelte';
+	import CollapsibleCard from './CollapsibleCard.svelte';
 
 	export let people: Person[];
+	export let rows: Row[];
+	export let collapsed: boolean;
 	export let priorCollapsed: boolean;
-	export let rows: Row[] = [];
 
-	function changeActive(rowIndex: number, person: string) {
+	function changeActive(index: number, person: string) {
 		rows = rows.map((row, i) => {
-			if (i !== rowIndex) return row;
+			if (i !== index) return row;
 
 			const actives = new Set<string>(row.actives);
 			if (actives.has(person)) {
@@ -53,73 +48,57 @@
 	}
 </script>
 
-<!-- TODO: add a warning if a row has no one assigned to it! -->
-<!-- TODO: scale icons, or have them roll around the width if they dont fit. -->
-<!-- TODO: Animation for the circles when they are selected / unselected -->
-<!-- TODO: Border for the circles when selected -->
-<!-- TODO: change delete to trash can -->
-<!-- TODO: Hide the arrows in the number input -->
-<!-- TODO: On phone, should be numpad only -->
-
-<Card.Root>
-	<Card.Header>
-		<Card.Title>What were the bill items?</Card.Title>
-	</Card.Header>
-	{#if people.length > 0}
-		<div transition:slide>
-			<Card.Content>
-				{#if rows.length === 0}
-					<div class="flex items-center space-x-4">
-						<Skeleton class="h-9 w-9 rounded-full" />
-						<div class="space-y-2">
-							<Skeleton class="h-3 w-[250px]" />
-							<Skeleton class="h-3 w-[200px]" />
-						</div>
-					</div>
-				{/if}
-				<div class="grid gap-2">
-					{#each rows as row, rowIndex}
-						<div class="flex items-center justify-between space-x-4">
-							<div class="flex items-center space-x-4">
-								<p class="text-sm font-medium leading-none">${row.amount}</p>
-							</div>
-							<div class="flex items-center space-x-2">
-								{#each people as person, personIndex}
-									{@const activeClass = row.actives.has(person.name) ? '' : 'opacity-20'}
-									<div
-										on:click={() => changeActive(rowIndex, person.name)}
-										on:keypress={() => changeActive(rowIndex, person.name)}
-										role="button"
-										tabindex="0"
-									>
-										<Avatar.Root>
-											<Avatar.Fallback
-												class={activeClass}
-												style="background-color:{people[personIndex].color}"
-												>{initials(people[personIndex])}</Avatar.Fallback
-											>
-										</Avatar.Root>
-									</div>
-								{/each}
-								<Button variant="link" on:click={() => deleteRow(rowIndex)}>delete</Button>
-							</div>
-						</div>
-					{/each}
-				</div>
-				<Separator class="my-3" />
-				<form class="flex space-x-2" on:submit|preventDefault={addRow}>
-					<Input
-						bind:value
-						type="number"
-						placeholder="0.00"
-						id="billInputBox"
-						min={0.01}
-						step={0.01}
-						on:focus={() => (priorCollapsed = true)}
-					/>
-					<Button variant="secondary" class="shrink-0" on:click={addRow}>Add</Button>
-				</form>
-			</Card.Content>
+<CollapsibleCard title="What were the bill items?" bind:collapsed also={people.length > 0}>
+	{#if rows.length === 0}
+		<div class="flex items-center space-x-4">
+			<Skeleton class="h-9 w-9 rounded-full" />
+			<div class="space-y-2">
+				<Skeleton class="h-3 w-[250px]" />
+				<Skeleton class="h-3 w-[200px]" />
+			</div>
 		</div>
 	{/if}
-</Card.Root>
+	<div class="grid gap-2">
+		{#each rows as row, index}
+			{@const rowEmpty = row.actives.size == 0}
+			<div class="flex items-center justify-between space-x-4">
+				<div class="flex items-center space-x-4">
+					<p class={'text-sm font-medium leading-none' + (rowEmpty ? ' text-red-700' : '')}>
+						${row.amount + (rowEmpty ? '*' : '')}
+					</p>
+				</div>
+				<div class="flex items-center space-x-2">
+					{#each people as person}
+						<button on:click={() => changeActive(index, person.name)}>
+							<PersonIcon
+								{person}
+								class={row.actives.has(person.name)
+									? 'border-solid border-2 border-gray-700'
+									: 'opacity-20'}
+							/>
+						</button>
+					{/each}
+					<Trash action={() => deleteRow(index)} />
+				</div>
+			</div>
+		{/each}
+	</div>
+	<Separator class="my-3" />
+	<form class="flex space-x-2" on:submit|preventDefault={addRow}>
+		<Input
+			bind:value
+			type="text"
+			inputmode="decimal"
+			pattern={'[0-9]*\\.?[0-9]{0,2}'}
+			placeholder="$0.00"
+			id="billInputBox"
+			min={0.01}
+			step={0.01}
+			on:focus={() => (priorCollapsed = true)}
+		/>
+		<Button variant="secondary" class="shrink-0" on:click={addRow}>Add</Button>
+	</form>
+	{#if rows.length > 0 && rows.some((row) => row.actives.size === 0)}
+		<p class="text-xs text-red-700 mt-2 -mb-3">Some rows are unassigned!</p>
+	{/if}
+</CollapsibleCard>
