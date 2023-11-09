@@ -35,7 +35,12 @@
 	}
 </script>
 
-<CollapsibleCard title="What was the total bill amount?" bind:collapsed also={rows.length > 0}>
+<CollapsibleCard
+	title="What was the total bill amount?"
+	description="Including tip and tax"
+	bind:collapsed
+	also={rows.length > 0}
+>
 	<Input
 		bind:value
 		type="text"

@@ -48,7 +48,12 @@
 	}
 </script>
 
-<CollapsibleCard title="What were the bill items?" bind:collapsed also={people.length > 0}>
+<CollapsibleCard
+	title="What were the bill items?"
+	description="Don't include tip or tax, we'll get to that later"
+	bind:collapsed
+	also={people.length > 0}
+>
 	{#if rows.length === 0}
 		<div class="flex items-center space-x-4">
 			<Skeleton class="h-9 w-9 rounded-full" />

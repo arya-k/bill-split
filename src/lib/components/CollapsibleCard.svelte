@@ -4,6 +4,7 @@
 	import { slide } from 'svelte/transition';
 
 	export let title: string;
+	export let description: string = '';
 	export let collapsed: boolean;
 	export let also: boolean = true; // Additional factor that must be true.
 </script>
@@ -16,6 +17,9 @@
 				<ChevronDown class="h-6 w-6 text-purple-800" />
 			</div>
 		</button>
+		{#if !collapsed && also && description}
+			<p class="text-sm text-purple-800">{description}</p>
+		{/if}
 	</Card.Header>
 	{#if !collapsed && also}
 		<div transition:slide>
