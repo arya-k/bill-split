@@ -12,9 +12,11 @@
 <Card.Root>
 	<Card.Header>
 		<button on:click={() => (collapsed = !collapsed)}>
-			<div class="flex justify-between">
+			<div class={'flex justify-between ' + (also ? '' : 'text-gray-500')}>
 				<Card.Title>{title}</Card.Title>
-				<ChevronDown class="h-6 w-6 text-purple-800" />
+				{#if also}
+					<ChevronDown class="h-6 w-6 text-purple-800" />
+				{/if}
 			</div>
 		</button>
 		{#if !collapsed && also && description}
