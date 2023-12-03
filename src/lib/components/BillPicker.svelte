@@ -30,7 +30,7 @@
 
 	let value = '';
 	function addRow() {
-		if (value === '') return;
+		if (value === '' || !parseFloat(value)) return;
 
 		const row = {
 			amount: parseFloat(value).toFixed(2),
