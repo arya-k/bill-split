@@ -1,5 +1,6 @@
 <script lang="ts">
 	import * as Avatar from '$lib/components/ui/avatar';
+	import * as Tooltip from '$lib/components/ui/tooltip';
 
 	import type { Person } from '$lib/utils';
 
@@ -15,8 +16,15 @@
 	export { className as class };
 </script>
 
-<Avatar.Root>
-	<Avatar.Fallback class={className} style="background-color:{person.color}"
-		>{initials(person)}</Avatar.Fallback
-	>
-</Avatar.Root>
+<Tooltip.Root>
+	<Tooltip.Trigger>
+		<Avatar.Root>
+			<Avatar.Fallback class={className} style="background-color:{person.color}"
+				>{initials(person)}</Avatar.Fallback
+			></Avatar.Root
+		>
+	</Tooltip.Trigger>
+	<Tooltip.Content>
+		<p>{person.name}</p>
+	</Tooltip.Content>
+</Tooltip.Root>
