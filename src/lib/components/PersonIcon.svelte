@@ -16,7 +16,7 @@
 	export { className as class };
 </script>
 
-<Tooltip.Root>
+<Tooltip.Root openDelay={50}>
 	<Tooltip.Trigger>
 		<Avatar.Root>
 			<Avatar.Fallback class={className} style="background-color:{person.color}"
