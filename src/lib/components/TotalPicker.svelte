@@ -27,7 +27,7 @@
 				return `${name} owes $${cost.toFixed(2)}${suffix}`;
 			})
 			.join('\n');
-		navigator.clipboard.writeText(text);
+		navigator.clipboard.writeText(text + '\n' + '^ via billy splits');
 
 		recentlyCopied = true; // debounce
 		clearTimeout(recentlyCopiedTimeout);
