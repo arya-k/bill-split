@@ -5,7 +5,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Separator } from '$lib/components/ui/separator';
 	import PersonIcon from './PersonIcon.svelte';
-	import { calculateBill, type Bill, type Person, type Row } from '$lib/utils';
+	import { calculateBill, type Bill, type Person, type Row } from '$lib/model';
 	import { CheckCheck, Copy } from 'lucide-svelte';
 	import CollapsibleCard from './CollapsibleCard.svelte';
 

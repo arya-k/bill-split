@@ -3,7 +3,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Skeleton } from '$lib/components/ui/skeleton';
-	import type { Person, Row } from '$lib/utils';
+	import type { Person, Row } from '$lib/model';
 	import PersonIcon from './PersonIcon.svelte';
 	import Trash from './Trash.svelte';
 	import CollapsibleCard from './CollapsibleCard.svelte';
