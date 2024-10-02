@@ -5,16 +5,15 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Separator } from '$lib/components/ui/separator';
 	import PersonIcon from './PersonIcon.svelte';
-	import { calculateBill, type Bill, type Person, type Row } from '$lib/model';
+	import { model } from '$lib/stores';
+	import { type Bill, calculateBill, isTotalLessThanSum } from '$lib/model';
 	import { CheckCheck, Copy } from 'lucide-svelte';
 	import CollapsibleCard from './CollapsibleCard.svelte';
+	import { compressToEncodedURIComponent } from 'lz-string';
 
-	export let rows: Row[];
-	export let people: Person[];
 	export let priorCollapsed: boolean;
 	export let collapsed = false;
 
-	let value = '';
 	let detailedView = false;
 
 	let recentlyCopied = false;
@@ -27,7 +26,10 @@
 				return `${name} owes $${cost.toFixed(2)}${suffix}`;
 			})
 			.join('\n');
-		navigator.clipboard.writeText(text + '\n' + '^ via billy splits');
+
+		const query = compressToEncodedURIComponent(JSON.stringify($model));
+		const url = `${window.location.origin}/?data=${query}`;
+		navigator.clipboard.writeText(text + '\n' + '^ via billy splits' + '\n' + url);
 
 		recentlyCopied = true; // debounce
 		clearTimeout(recentlyCopiedTimeout);
@@ -39,10 +41,10 @@
 	title="What was the total bill amount?"
 	description="Including tip and tax"
 	bind:collapsed
-	also={rows.length > 0}
+	also={$model.rows.length > 0}
 >
 	<Input
-		bind:value
+		bind:value={$model.total}
 		type="text"
 		inputmode="decimal"
 		pattern={'[0-9]*\\.?[0-9]{0,2}'}
@@ -52,15 +54,15 @@
 		step={0.01}
 		on:focus={(event) => (priorCollapsed = true)}
 	/>
-	{#if parseFloat(value) && parseFloat(value) < rows.reduce((acc, row) => acc + parseFloat(row.amount), 0)}
+	{#if isTotalLessThanSum($model)}
 		<p class="text-xs text-red-700 mt-2 -mb-3">Total is smaller than sum of lines</p>
 	{/if}
-	{#if parseFloat(value)}
-		{@const bill = calculateBill(people, rows, parseFloat(value))}
+	{#if parseFloat($model.total)}
+		{@const bill = calculateBill($model)}
 		<Separator class="my-3" />
 		<div class="flex items-stretch flex-col space-y-2 sm:space-x-4 sm:flex-row">
 			<div class="grid gap-2 flex-auto">
-				{#each people as person}
+				{#each $model.people as person}
 					<div class="flex items-center justify-between space-x-4">
 						<div class="flex items-center space-x-4">
 							<PersonIcon {person} />

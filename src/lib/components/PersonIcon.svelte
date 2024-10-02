@@ -2,7 +2,7 @@
 	import * as Avatar from '$lib/components/ui/avatar';
 	import * as Tooltip from '$lib/components/ui/tooltip';
 
-	import type { Person } from '$lib/utils';
+	import type { Person } from '$lib/model';
 
 	function initials({ name }: Person): string {
 		return name
@@ -12,15 +12,15 @@
 	}
 
 	export let person: Person;
-	let className: string = '';
-	export { className as class };
+	export let active: boolean = true;
 </script>
 
 <Tooltip.Root openDelay={50}>
 	<Tooltip.Trigger>
 		<Avatar.Root>
-			<Avatar.Fallback class={className} style="background-color:{person.color}"
-				>{initials(person)}</Avatar.Fallback
+			<Avatar.Fallback
+				class={active ? 'border-solid border-2 border-gray-600' : 'opacity-20'}
+				style="background-color:{person.color}">{initials(person)}</Avatar.Fallback
 			></Avatar.Root
 		>
 	</Tooltip.Trigger>

@@ -3,32 +3,26 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Skeleton } from '$lib/components/ui/skeleton';
-
-	import { type Person, pastels } from '$lib/utils';
 	import Trash from './Trash.svelte';
 	import PersonIcon from './PersonIcon.svelte';
 	import CollapsibleCard from './CollapsibleCard.svelte';
+	import { addPerson as addPersonRaw, removePerson as removePersonRaw } from '$lib/model';
+	import { model } from '$lib/stores';
 
-	export let people: Person[];
 	export let collapsed: boolean;
 
 	let value = '';
-	let nextPastel = 0;
 
 	function addPerson() {
 		if (value === '') return;
-
-		let color = pastels[nextPastel % pastels.length];
-		nextPastel += 1;
-
-		people = [...people, { name: value, color }];
+		model.update((model) => addPersonRaw(model, value));
 		value = '';
 		const inputBox = document.getElementById('personInputBox');
 		inputBox && inputBox.focus();
 	}
 
-	function deletePerson(index: number) {
-		people = people.filter((_, i) => i !== index);
+	function removePerson(index: number) {
+		model.update((model) => removePersonRaw(model, index));
 	}
 </script>
 
@@ -38,7 +32,7 @@
 		<Button variant="secondary" class="shrink-0" on:click={addPerson}>Add</Button>
 	</form>
 	<Separator class="my-3" />
-	{#if people.length === 0}
+	{#if $model.people.length === 0}
 		<div class="flex items-center space-x-4">
 			<Skeleton class="h-9 w-9 rounded-full" />
 			<div class="space-y-2">
@@ -48,7 +42,7 @@
 		</div>
 	{/if}
 	<div class="grid gap-2">
-		{#each people as person, index}
+		{#each $model.people as person, index}
 			<div class="flex items-center justify-between space-x-4">
 				<div class="flex items-center space-x-4">
 					<PersonIcon {person} />
@@ -58,7 +52,7 @@
 						</p>
 					</div>
 				</div>
-				<Trash action={() => deletePerson(index)} />
+				<Trash action={() => removePerson(index)} />
 			</div>
 		{/each}
 	</div>

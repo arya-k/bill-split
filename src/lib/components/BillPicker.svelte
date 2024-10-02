@@ -3,48 +3,36 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Separator } from '$lib/components/ui/separator';
 	import { Skeleton } from '$lib/components/ui/skeleton';
-	import type { Person, Row } from '$lib/model';
+	import {
+		hasUnassignedRows,
+		togglePersonActive,
+		addRow as addRowRaw,
+		removeRow as removeRowRaw
+	} from '$lib/model';
+	import { model } from '$lib/stores';
 	import PersonIcon from './PersonIcon.svelte';
 	import Trash from './Trash.svelte';
 	import CollapsibleCard from './CollapsibleCard.svelte';
 
-	export let people: Person[];
-	export let rows: Row[];
 	export let collapsed: boolean;
 	export let priorCollapsed: boolean;
 
 	function changeActive(index: number, person: string) {
-		rows = rows.map((row, i) => {
-			if (i !== index) return row;
-
-			const actives = new Set<string>(row.actives);
-			if (actives.has(person)) {
-				actives.delete(person);
-			} else {
-				actives.add(person);
-			}
-
-			return { ...row, actives };
-		});
+		model.update((model) => togglePersonActive(model, index, person));
 	}
 
 	let value = '';
 	function addRow() {
 		if (value === '' || !parseFloat(value)) return;
 
-		const row = {
-			amount: parseFloat(value).toFixed(2),
-			actives: new Set<string>()
-		};
-
-		rows = [...rows, row];
+		model.update((model) => addRowRaw(model, parseFloat(value)));
 		value = '';
 		const inputBox = document.getElementById('billInputBox');
 		inputBox && inputBox.focus();
 	}
 
 	function deleteRow(index: number) {
-		rows = rows.filter((_, i) => i !== index);
+		model.update((model) => removeRowRaw(model, index));
 	}
 </script>
 
@@ -52,9 +40,9 @@
 	title="What were the bill items?"
 	description="Don't include tip or tax, we'll get to that later"
 	bind:collapsed
-	also={people.length > 0}
+	also={$model.people.length > 0}
 >
-	{#if rows.length === 0}
+	{#if $model.rows.length === 0}
 		<div class="flex items-center space-x-4">
 			<Skeleton class="h-9 w-9 rounded-full" />
 			<div class="space-y-2">
@@ -64,7 +52,7 @@
 		</div>
 	{/if}
 	<div class="grid gap-2">
-		{#each rows as row, index}
+		{#each $model.rows as row, index}
 			{@const rowEmpty = row.actives.size == 0}
 			<div class="flex items-center justify-between space-x-4">
 				<div class="flex items-center space-x-4">
@@ -73,14 +61,9 @@
 					</p>
 				</div>
 				<div class="flex items-center space-x-2">
-					{#each people as person}
+					{#each $model.people as person}
 						<button on:click={() => changeActive(index, person.name)}>
-							<PersonIcon
-								{person}
-								class={row.actives.has(person.name)
-									? 'border-solid border-2 border-gray-700'
-									: 'opacity-20'}
-							/>
+							<PersonIcon {person} active={row.actives.includes(person.name)} />
 						</button>
 					{/each}
 					<Trash action={() => deleteRow(index)} />
@@ -103,7 +86,7 @@
 		/>
 		<Button variant="secondary" class="shrink-0" on:click={addRow}>Add</Button>
 	</form>
-	{#if rows.length > 0 && rows.some((row) => row.actives.size === 0)}
+	{#if hasUnassignedRows($model)}
 		<p class="text-xs text-red-700 mt-2 -mb-3">Some rows are unassigned!</p>
 	{/if}
 </CollapsibleCard>
