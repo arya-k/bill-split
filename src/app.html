@@ -1,21 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" class="bg-white">
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+		/>
+		<meta content="#FFFFFF" name="theme-color" />
+		<link href="%sveltekit.assets%/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+		<link href="%sveltekit.assets%/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+		<link color="#5bbad5" href="%sveltekit.assets%/safari-pinned-tab.svg" rel="mask-icon" />
+		<meta name="description" content="Easily calculate bill splits when out with friends." />
+		<title>Billy Splits</title>
 
-<head>
-	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
-	<meta content="#FFFFFF" name="theme-color" />
-	<link href="%sveltekit.assets%/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
-	<link href="%sveltekit.assets%/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
-	<link color="#5bbad5" href="%sveltekit.assets%/safari-pinned-tab.svg" rel="mask-icon" />
-	<meta name="description" content="Easily calculate bill splits when out with friends." />
-	<title>Billy Splits</title>
+		%sveltekit.head%
+	</head>
 
-	%sveltekit.head%
-</head>
-
-<body data-sveltekit-preload-data="hover">
-	<div style="display: contents">%sveltekit.body%</div>
-</body>
-
+	<body data-sveltekit-preload-data="hover">
+		<div style="display: contents">%sveltekit.body%</div>
+	</body>
 </html>

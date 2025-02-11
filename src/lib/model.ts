@@ -1,5 +1,3 @@
-import { pastels } from './utils';
-
 export type Person = {
 	name: string;
 	color: string;
@@ -16,24 +14,24 @@ export type Model = {
 	people: Person[];
 	rows: Row[];
 	total: string;
-	nextPastelIndex: number;
 };
 
 export function empty(): Model {
 	return {
 		people: [],
 		rows: [],
-		total: '',
-		nextPastelIndex: 0
+		total: ''
 	};
 }
 
 export function addPerson(model: Model, name: string): Model {
-	const color = pastels[model.nextPastelIndex % pastels.length];
+	const hash = name.split('').reduce((acc, char) => {
+		return (acc << 5) + acc + char.charCodeAt(0); // acc * 33 + char
+	}, 5381);
+	const color = `hsla(${Math.abs(hash) % 360}, 70%, 72%, 0.8)`;
 	return {
 		...model,
-		people: [...model.people, { name, color }],
-		nextPastelIndex: model.nextPastelIndex + 1
+		people: [...model.people, { name, color }]
 	};
 }
 

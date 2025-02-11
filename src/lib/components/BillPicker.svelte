@@ -52,10 +52,10 @@
 		</div>
 	{/if}
 	<div class="grid gap-2">
-		{#each $model.rows as row, index}
-			{@const rowEmpty = row.actives.size == 0}
-			<div class="flex items-center justify-between space-x-4">
-				<div class="flex items-center space-x-4">
+		<div class="grid grid-cols-[auto_1fr_auto] gap-4 items-center">
+			{#each $model.rows as row, index}
+				{@const rowEmpty = row.actives.size == 0}
+				<div>
 					<p class={'text-sm font-medium leading-none' + (rowEmpty ? ' text-red-700' : '')}>
 						${row.amount + (rowEmpty ? '*' : '')}
 					</p>
@@ -66,10 +66,12 @@
 							<PersonIcon {person} active={row.actives.includes(person.name)} />
 						</button>
 					{/each}
+				</div>
+				<div>
 					<Trash action={() => deleteRow(index)} />
 				</div>
-			</div>
-		{/each}
+			{/each}
+		</div>
 	</div>
 	<Separator class="my-3" />
 	<form class="flex space-x-2" on:submit|preventDefault={addRow}>
