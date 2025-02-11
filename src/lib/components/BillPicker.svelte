@@ -54,7 +54,7 @@
 	<div class="grid gap-2">
 		<div class="grid grid-cols-[auto_1fr_auto] gap-4 items-center">
 			{#each $model.rows as row, index}
-				{@const rowEmpty = row.actives.size == 0}
+				{@const rowEmpty = row.actives.length == 0}
 				<div>
 					<p class={'text-sm font-medium leading-none' + (rowEmpty ? ' text-red-700' : '')}>
 						${row.amount + (rowEmpty ? '*' : '')}
