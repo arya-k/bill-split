@@ -4,9 +4,14 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import Trash from './Trash.svelte';
+	import Palette from './Palette.svelte';
 	import PersonIcon from './PersonIcon.svelte';
 	import CollapsibleCard from './CollapsibleCard.svelte';
-	import { addPerson as addPersonRaw, removePerson as removePersonRaw } from '$lib/model';
+	import {
+		addPerson as addPersonRaw,
+		removePerson as removePersonRaw,
+		updatePersonColor as updatePersonColorRaw
+	} from '$lib/model';
 	import { model } from '$lib/stores';
 
 	export let collapsed: boolean;
@@ -23,6 +28,10 @@
 
 	function removePerson(index: number) {
 		model.update((model) => removePersonRaw(model, index));
+	}
+
+	function updatePersonColor(index: number) {
+		model.update((model) => updatePersonColorRaw(model, index));
 	}
 </script>
 
@@ -52,7 +61,10 @@
 						</p>
 					</div>
 				</div>
-				<Trash action={() => removePerson(index)} />
+				<div class="flex items-center space-x-2">
+					<Palette action={() => updatePersonColor(index)} />
+					<Trash action={() => removePerson(index)} />
+				</div>
 			</div>
 		{/each}
 	</div>

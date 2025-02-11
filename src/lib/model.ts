@@ -25,10 +25,7 @@ export function empty(): Model {
 }
 
 export function addPerson(model: Model, name: string): Model {
-	const hash = name.split('').reduce((acc, char) => {
-		return (acc << 5) + acc + char.charCodeAt(0); // acc * 33 + char
-	}, 5381);
-	const color = `hsla(${Math.abs(hash) % 360}, 70%, 72%, 0.8)`;
+	const color = `hsla(${Math.floor(Math.random() * 360)}, 70%, 72%, 0.8)`;
 	return {
 		...model,
 		people: [...model.people, { name, color }]
@@ -39,6 +36,21 @@ export function removePerson(model: Model, index: number): Model {
 	return {
 		...model,
 		people: model.people.filter((_, i) => i !== index)
+	};
+}
+
+function rotateHue(color: string): string {
+	const currentHue = parseInt(color.match(/hsla\((\d+)/)?.[1] || '0');
+	const dHue = Math.floor(Math.random() * 60) + 40;
+	return `hsla(${(currentHue + dHue) % 360}, 70%, 72%, 0.8)`;
+}
+
+export function updatePersonColor(model: Model, index: number): Model {
+	return {
+		...model,
+		people: model.people.map((person, i) =>
+			i === index ? { ...person, color: rotateHue(person.color) } : person
+		)
 	};
 }
 
