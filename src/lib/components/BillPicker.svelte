@@ -7,7 +7,8 @@
 		hasUnassignedRows,
 		togglePersonActive,
 		addRow as addRowRaw,
-		removeRow as removeRowRaw
+		removeRow as removeRowRaw,
+		calculateSubtotal
 	} from '$lib/model';
 	import { model } from '$lib/stores';
 	import PersonIcon from './PersonIcon.svelte';
@@ -74,6 +75,7 @@
 		</div>
 	</div>
 	<Separator class="my-3" />
+	<p class="text-sm text-purple-800 mb-2">Subtotal: ${calculateSubtotal($model).toFixed(2)}</p>
 	<form class="flex space-x-2" on:submit|preventDefault={addRow}>
 		<Input
 			bind:value

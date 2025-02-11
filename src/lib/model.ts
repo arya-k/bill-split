@@ -75,6 +75,10 @@ export function isTotalLessThanSum(model: Model): boolean {
 	return parseFloat(model.total) < sum;
 }
 
+export function calculateSubtotal(model: Model): number {
+	return model.rows.reduce((acc, row) => acc + row.amount, 0);
+}
+
 // Derived store for the calculated bill
 export function calculateBill(model: Model): Bill {
 	let bill: Record<string, [number, string[]]> = {};
