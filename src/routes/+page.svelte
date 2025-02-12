@@ -6,7 +6,8 @@
 
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import { decompressFromEncodedURIComponent } from 'lz-string';
+	import pkg from 'lz-string';
+	const { decompressFromEncodedURIComponent } = pkg;
 	import type { Model } from '$lib/model';
 	import { model } from '$lib/stores';
 

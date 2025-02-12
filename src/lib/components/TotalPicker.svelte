@@ -9,7 +9,8 @@
 	import { type Bill, calculateBill, isTotalLessThanSum } from '$lib/model';
 	import { CheckCheck, Copy } from 'lucide-svelte';
 	import CollapsibleCard from './CollapsibleCard.svelte';
-	import { compressToEncodedURIComponent } from 'lz-string';
+	import pkg from 'lz-string';
+	const { compressToEncodedURIComponent } = pkg;
 
 	export let priorCollapsed: boolean;
 	export let collapsed = false;
