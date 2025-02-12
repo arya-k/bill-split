@@ -24,7 +24,7 @@
 		{/if}
 	</Card.Header>
 	{#if !collapsed && also}
-		<div transition:slide>
+		<div transition:slide|global>
 			<Card.Content>
 				<slot />
 			</Card.Content>
