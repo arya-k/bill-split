@@ -6,7 +6,7 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import PersonIcon from './PersonIcon.svelte';
 	import { model } from '$lib/stores';
-	import { type Bill, calculateBill, isTotalLessThanSum } from '$lib/model';
+	import { type Bill, calculateBill, isTotalLessThanSubtotal } from '$lib/model';
 	import { CheckCheck, Copy } from 'lucide-svelte';
 	import CollapsibleCard from './CollapsibleCard.svelte';
 	import pkg from 'lz-string';
@@ -55,8 +55,8 @@
 		step={0.01}
 		on:focus={(event) => (priorCollapsed = true)}
 	/>
-	{#if isTotalLessThanSum($model)}
-		<p class="text-xs text-red-700 mt-2 -mb-3">Total is smaller than sum of lines</p>
+	{#if isTotalLessThanSubtotal($model)}
+		<p class="text-xs text-red-700 mt-2 -mb-3">Total is smaller than subtotal</p>
 	{/if}
 	{#if parseFloat($model.total)}
 		{@const bill = calculateBill($model)}

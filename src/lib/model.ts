@@ -82,7 +82,7 @@ export function hasUnassignedRows(model: Model): boolean {
 	return model.rows.some((row) => row.actives.length === 0);
 }
 
-export function isTotalLessThanSum(model: Model): boolean {
+export function isTotalLessThanSubtotal(model: Model): boolean {
 	const sum = model.rows.reduce((acc, row) => acc + row.amount, 0);
 	return parseFloat(model.total) < sum;
 }
