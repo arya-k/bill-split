@@ -63,9 +63,11 @@
 				</div>
 				<div class="flex items-center space-x-2">
 					{#each $model.people as person}
-						<button on:click={() => changeActive(index, person.name)}>
-							<PersonIcon {person} active={row.actives.includes(person.name)} />
-						</button>
+						<PersonIcon
+							{person}
+							active={row.actives.includes(person.name)}
+							action={() => changeActive(index, person.name)}
+						/>
 					{/each}
 				</div>
 				<div>

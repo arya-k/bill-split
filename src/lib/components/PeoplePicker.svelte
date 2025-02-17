@@ -4,7 +4,6 @@
 	import { Separator } from '$lib/components/ui/separator';
 	import { Skeleton } from '$lib/components/ui/skeleton';
 	import Trash from './Trash.svelte';
-	import Palette from './Palette.svelte';
 	import PersonIcon from './PersonIcon.svelte';
 	import CollapsibleCard from './CollapsibleCard.svelte';
 	import {
@@ -54,17 +53,14 @@
 		{#each $model.people as person, index}
 			<div class="flex items-center justify-between space-x-4">
 				<div class="flex items-center space-x-4">
-					<PersonIcon {person} />
+					<PersonIcon {person} action={() => updatePersonColor(index)} />
 					<div>
 						<p class="text-sm font-medium leading-none">
 							{person.name}
 						</p>
 					</div>
 				</div>
-				<div class="flex items-center space-x-2">
-					<Palette action={() => updatePersonColor(index)} />
-					<Trash action={() => removePerson(index)} />
-				</div>
+				<Trash action={() => removePerson(index)} />
 			</div>
 		{/each}
 	</div>
